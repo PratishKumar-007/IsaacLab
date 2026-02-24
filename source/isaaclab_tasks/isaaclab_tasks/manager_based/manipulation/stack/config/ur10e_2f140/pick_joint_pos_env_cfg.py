@@ -157,8 +157,8 @@ class RewardsCfg:
 
     reach_object = RewTerm(
         func=lift_mdp.object_ee_distance,
-        params={"std": 0.1, "object_cfg": SceneEntityCfg("cube")},
-        weight=1.0,
+        params={"std": 0.5, "object_cfg": SceneEntityCfg("cube")},
+        weight=2.0,
     )
     lift_object = RewTerm(
         func=lift_mdp.object_is_lifted,
