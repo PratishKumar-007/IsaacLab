@@ -212,8 +212,8 @@ class UR10e2F140CubePickEnvCfg(StackEnvCfg):
         )
 
         # action configs
-        self.actions.arm_action = mdp.RelativeJointPositionActionCfg(
-            asset_name="robot", joint_names=UR10E_ARM_JOINT_NAMES, scale=0.025, use_zero_offset=True
+        self.actions.arm_action = mdp.JointPositionActionCfg(
+            asset_name="robot", joint_names=UR10E_ARM_JOINT_NAMES, scale=0.15, use_default_offset=True
         )
         self.gripper_drive_joint_name = "finger_joint"
         self.gripper_open_val = 0.0
@@ -225,6 +225,14 @@ class UR10e2F140CubePickEnvCfg(StackEnvCfg):
             open_command_expr={self.gripper_drive_joint_name: self.gripper_open_val},
             close_command_expr={self.gripper_drive_joint_name: self.gripper_closed_val},
         )
+
+        # soften arm gains to reduce jerky motion and improve contact compliance
+        self.scene.robot.actuators["shoulder"].stiffness = 800.0
+        self.scene.robot.actuators["shoulder"].damping = 90.0
+        self.scene.robot.actuators["elbow"].stiffness = 400.0
+        self.scene.robot.actuators["elbow"].damping = 45.0
+        self.scene.robot.actuators["wrist"].stiffness = 150.0
+        self.scene.robot.actuators["wrist"].damping = 35.0
 
         # cube properties
         cube_properties = RigidBodyPropertiesCfg(
@@ -258,7 +266,7 @@ class UR10e2F140CubePickEnvCfg(StackEnvCfg):
                 FrameTransformerCfg.FrameCfg(
                     prim_path="{ENV_REGEX_NS}/Robot/wrist_3_link",
                     name="end_effector",
-                    offset=OffsetCfg(pos=(0.0, 0.0, 0.0)),
+                    offset=OffsetCfg(pos=(0.22, 0.0, 0.0)),
                 ),
             ],
         )
